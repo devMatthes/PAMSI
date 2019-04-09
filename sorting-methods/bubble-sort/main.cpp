@@ -1,51 +1,44 @@
 #include <iostream>
+#include <cstdlib>
 #include <chrono>
+#include <array>
 
-void bubble_sort(int *tab, int n)
+template <typename T, size_t N>
+void bubble_sort(std::array<T, N>& numbers)
 {
-    for(int i=1; i<n; i++)
+    for(unsigned int i=1; i<numbers.size(); i++)
     {
-        for(int j=1; j<n; j++)
+        for(unsigned int j=1; j<numbers.size(); j++)
         {
-            if(tab[j] < tab[j-1])
+            if(numbers[j] < numbers[j-1])
             {
-                int temp;
-                temp = tab[j-1];
-                tab[j-1] = tab[j];
-                tab[j] = temp;
+                std::swap(numbers[j-1], numbers[j]);
             }
         }
     }
 }
 
+template <typename T, size_t N>
+void display(std::array<T, N>& numbers)
+{
+    for(const auto& i : numbers)
+    {
+        std::cout << i << ' ';
+    }
+}
+
 int main()
 {
-    int n = 5;
-    int *tablica = new int [n];
-
-    tablica[0] = 30;
-    tablica[1] = 10202;
-    tablica[2] = 984;
-    tablica[3] = 266;
-    tablica[4] = 1;
-
-    for(int i=0; i<n; i++)
+    std::array<int, 10> numbers;
+    for(auto& i : numbers)
     {
-        std::cout << tablica[i] << std::endl;
+        i = (std::rand() % 10000) + 6;
     }
-
     auto start = std::chrono::steady_clock::now();
-
-    bubble_sort(tablica, n);
-
+    bubble_sort(numbers);
     auto end = std::chrono::steady_clock::now();
-
-    for(int i=0; i<n; i++)
-    {
-        std::cout << tablica[i] << std::endl;
-    }
-
+    display(numbers);
+    std::cout << std::endl;
     std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << std::endl;
-
     return 0;
 }
