@@ -9,8 +9,8 @@ void quicksort(std::array<T, N>& numbers, const typename std::array<T, N>::itera
 {
     auto pivot = *q;
 
-    std::partition(numbers.begin(), numbers.end(), [&](int value) { return value < pivot; });
-    auto s = std::partition_point(numbers.begin(), numbers.end(), [&](int value) { return value < pivot; });
+    std::partition(numbers.begin(), numbers.end(), [&](const auto& value) { return value < pivot; });
+    auto s = std::partition_point(numbers.begin(), numbers.end(), [&](const auto& value) { return value < pivot; });
     std::swap(*s, *q);
     if(p < q)
     {
