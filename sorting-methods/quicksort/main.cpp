@@ -1,57 +1,45 @@
 #include <iostream>
+#include <cstdlib>
 #include <chrono>
+#include <array>
+#include <algorithm>
 
-void quicksort(int *tab, int left, int right)
+template <typename T, size_t N>
+void quicksort(std::array<T, N>& numbers, const typename std::array<T, N>::iterator &p, const typename std::array<T, N>::iterator &q)
 {
-    int i = left, j = right, temp;
-    int axis = tab[(left+right)/2];
+    auto pivot = *q;
 
-    do
+    std::partition(numbers.begin(), numbers.end(), [&](int value) { return value < pivot; });
+    auto s = std::partition_point(numbers.begin(), numbers.end(), [&](int value) { return value < pivot; });
+    std::swap(*s, *q);
+    if(p < q)
     {
-        while(tab[i] < axis) i++;
-        while(tab[j] > axis) j--;
-        if(i <= j)
-        {
-            temp = tab[i];
-            tab[i] = tab[j];
-            tab[j] = temp;
-            i++;
-            j--;
-        }
+        quicksort(numbers, p, s-1);
+        quicksort(numbers, s+1, q);
     }
-    while(i <= j);
-    if(j > left) quicksort(tab, left, j);
-    if(i < right) quicksort(tab, i, right);
+}
+
+template <typename T, size_t N>
+void display(std::array<T, N>& numbers)
+{
+    for(const auto& i : numbers)
+    {
+        std::cout << i << ' ';
+    }
 }
 
 int main()
 {
-    int n = 5;
-    int *tablica = new int [n];
-
-    tablica[0] = 30;
-    tablica[1] = 10202;
-    tablica[2] = 984;
-    tablica[3] = 266;
-    tablica[4] = 1;
-
-    for(int i=0; i<n; i++)
+    std::array<int, 10> numbers;
+    for(auto& i : numbers)
     {
-        std::cout << tablica[i] << std::endl;
+        i = (std::rand() % 10000) + 6;
     }
-
     auto start = std::chrono::steady_clock::now();
-
-    quicksort(tablica, 0, n-1);
-
+    quicksort(numbers, numbers.begin(), (numbers.end() - 1));
     auto end = std::chrono::steady_clock::now();
-
-    for(int i=0; i<n; i++)
-    {
-        std::cout << tablica[i] << std::endl;
-    }
-
+    display(numbers);
+    std::cout << std::endl;
     std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << std::endl;
-
     return 0;
 }
