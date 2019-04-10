@@ -6,13 +6,14 @@
 template <typename T, size_t N>
 void bubble_sort(std::array<T, N>& numbers)
 {
-    for(unsigned int i=1; i<numbers.size(); i++)
+    for(const auto& i : numbers)
+    //for(unsigned int i = 1; i<numbers.size(); i++)
     {
-        for(unsigned int j=1; j<numbers.size(); j++)
+        for(typename std::array<T, N>::iterator it = numbers.begin(); it != numbers.end(); it++)
         {
-            if(numbers[j] < numbers[j-1])
+            if(*it < *(it - 1))
             {
-                std::swap(numbers[j-1], numbers[j]);
+                std::swap(*it, *(it - 1));
             }
         }
     }
