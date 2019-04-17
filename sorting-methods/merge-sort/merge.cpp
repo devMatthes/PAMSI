@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <chrono>
+#include <cstdlib>
 
 template <typename T>
 void merge(std::vector<T>& arr, typename std::vector<T>::iterator begin, const typename std::vector<T>::iterator mid, const typename std::vector<T>::iterator end)
@@ -44,12 +46,27 @@ void mergesort(std::vector<T>& arr, typename std::vector<T>::iterator begin,  co
     }
 }
 
-int main()
+template <typename T>
+void display(std::vector<T> arr)
 {
-    std::vector<int> arr;
-    mergesort(arr, arr.begin(), arr.end());
-    for(auto i : arr)
+    for(auto& i : arr)
     {
         std::cout << i << ' ';
     }
+    std::cout << std::endl;
+}
+
+int main()
+{
+    std::vector<int> arr(10);
+    std::generate(arr.begin(), arr.end(), [](){return (std::rand() % 10000) + 6;});
+    std::cout << "Przed posortowaniem: ";
+    display(arr);
+    auto start = std::chrono::steady_clock::now();
+    mergesort(arr, arr.begin(), arr.end());
+    auto end = std::chrono::steady_clock::now();
+    std::cout << "Po posortowaniu: ";
+    display(arr);
+    std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << std::endl;
+    return 0;
 }
