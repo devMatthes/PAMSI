@@ -1,73 +1,72 @@
 #include <array>
+#include <chrono>
+#include <algorithm>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 
-template <std::size_t SIZE>
-void merge(std::array<int, SIZE>& array, int leftIndex, int middleIndex, int rightIndex)
+template <typename T, size_t N>
+void merge(std::array<T, N>& array, const typename std::array<T, N>::iterator &left, const typename std::array<T, N>::iterator &middle, const typename std::array<T, N>::iterator &right)
 {
-    std::array<int, array.size()> cpyArray;
-    for(int i=leftIndex; i<=rightIndex; i++)
-    {
-        cpyArray[i] = array[i];
-    }
-    int point1 = leftIndex;
-    int point2 = middleIndex;
-    int current = leftIndex;
+    std::array<T, N> cpyArray;
+    auto f1 = left;
+    auto f2 = middle;
+    auto current = left;
 
-    while(point1 <= middleIndex && point2 <= rightIndex)
+    while(f1 < middle && f2 < right)
     {
-        if(cpyArray[point1] <= cpyArray[point2])
+        if(array[*f1] < array[*f2])
         {
-            array[current] = cpyArray[point1];
-            point1++;
+            cpyArray[*current] = array[*f1];
+            std::advance(f1, 1);
         }
         else
         {
-            array[current] = cpyArray[point2];
-            point2++;
+            cpyArray[*current] = array[*f2];
+            std::advance(f2, 1);
         }
-        current++;
+        std::advance(current, 1);
     }
-    while(point1 <= middleIndex)
+    while(f1 < middle)
     {
-        array[current] = cpyArray[point1];
-        current++; point1++;
+        cpyArray[*current] = array[*f1];
+        std::advance(f1, 1);
+        std::advance(current, 1);
     }
+    std::copy(cpyArray.begin(), cpyArray.end(), array.begin());
 }
 
-template <std::size_t SIZE>
-void mergeSort(std::array<int, SIZE>& array, int leftIndex, int rightIndex)
+template <typename T, size_t N>
+void mergesort(std::array<T, N>& array, const typename std::array<T, N>::iterator &left, const typename std::array<T, N>::iterator &right)
 {
-    if(leftIndex < rightIndex)
+    if(left < right)
     {
-        int middle = (leftIndex + rightIndex) / 2;
-        mergeSort(array, leftIndex, middle);
-        mergeSort(array, middle + 1, rightIndex);
-        merge(array, leftIndex, middle, rightIndex);
+        auto middle = array.begin() + array.size() / 2;
+        mergesort(array, left, middle);
+        mergesort(array, middle, right);
+        merge(array, left, middle, right);
     }
-}
-
-template <std::size_t SIZE>
-void sort(std::array<int, SIZE>& arrayToSort)
-{
-    mergeSort(arrayToSort, arrayToSort.front(), arrayToSort.back());
 }
 
 int main()
 {
     std::array<int, 10> array;
-    for(int i=0; i<array.size(); i++)
+    for(unsigned int i=0; i<array.size(); i++)
     {
         array[i] = rand() % 10 + 1;
     }
+
     std::cout << "Tablica przed posortowaniem:" << std::endl;
     for(const auto& s: array)
+    {
         std::cout << s << ' ';
+    }
     std::cout << std::endl;
 
-    mergeSort(array, array.front(), array.back());
+    mergesort(array, array.begin(), (array.end() - 1));
     std::cout << "Tablica po posortowaniu:" << std::endl;
     for(const auto& s: array)
+    {
         std::cout << s << ' ';
+    }
     std::cout << std::endl;
 }
