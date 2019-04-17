@@ -3,43 +3,47 @@
 #include <chrono>
 #include <array>
 #include <algorithm>
+#include <random>
 
-template <typename T, size_t N>
-void quicksort(std::array<T, N>& numbers, const typename std::array<T, N>::iterator &p, const typename std::array<T, N>::iterator &q)
+template <typename T>
+void quicksort(std::vector<T>& numbers, typename std::vector<T>::iterator p, typename std::vector<T>::iterator q)
 {
-    auto pivot = *q;
-
-    std::partition(numbers.begin(), numbers.end(), [&](const auto& value) { return value < pivot; });
-    auto s = std::partition_point(numbers.begin(), numbers.end(), [&](const auto& value) { return value < pivot; });
-    std::swap(*s, *q);
-    if(p < q)
+    if(p >= q)
     {
-        quicksort(numbers, p, s-1);
-        quicksort(numbers, s+1, q);
+        return;
     }
+    auto pivot = q;
+    auto border = std::partition(p, q, [pivot](const auto& value){ return value < *pivot; });
+
+    if(border != q)
+    {
+        std::swap(*border, *q);
+    }
+
+    quicksort(numbers, p, border - 1);
+    quicksort(numbers, border + 1, q);
 }
 
-template <typename T, size_t N>
-void display(std::array<T, N>& numbers)
+template <typename T>
+void display(std::vector<T>& numbers)
 {
     for(const auto& i : numbers)
     {
         std::cout << i << ' ';
     }
+    std::cout << std::endl;
 }
 
 int main()
 {
-    std::array<int, 10> numbers;
-    for(auto& i : numbers)
-    {
-        i = (std::rand() % 10000) + 6;
-    }
+    std::vector<int> numbers(5000);
+    std::generate(numbers.begin(), numbers.end(), [](){return std::rand() % 5000;});
+    //display(numbers);
     auto start = std::chrono::steady_clock::now();
-    quicksort(numbers, numbers.begin(), (numbers.end() - 1));
+    quicksort(numbers, numbers.begin(), (numbers.end()-1));
     auto end = std::chrono::steady_clock::now();
-    display(numbers);
+    //display(numbers);
     std::cout << std::endl;
-    std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << std::endl;
+    std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::microseconds>(end-start).count() << std::endl;
     return 0;
 }
