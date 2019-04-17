@@ -58,15 +58,15 @@ void display(std::vector<T> arr)
 
 int main()
 {
-    std::vector<int> arr(10);
-    std::generate(arr.begin(), arr.end(), [](){return (std::rand() % 10000) + 6;});
+    std::vector<int> arr(5000);
+    std::generate(arr.begin(), arr.end(), [](){return (std::rand() % 1000000) + 6;});
     std::cout << "Przed posortowaniem: ";
-    display(arr);
+    //display(arr);
     auto start = std::chrono::steady_clock::now();
     mergesort(arr, arr.begin(), arr.end());
     auto end = std::chrono::steady_clock::now();
-    std::cout << "Po posortowaniu: ";
-    display(arr);
-    std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << std::endl;
+    //std::cout << "Po posortowaniu: ";
+    //display(arr);
+    std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::microseconds>(end-start).count() << std::endl;
     return 0;
 }

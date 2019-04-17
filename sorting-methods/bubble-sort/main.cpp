@@ -30,16 +30,16 @@ void display(std::array<T, N>& numbers)
 
 int main()
 {
-    std::array<int, 10> numbers;
+    std::array<int, 5000> numbers;
     for(auto& i : numbers)
     {
-        i = (std::rand() % 10000) + 6;
+        i = std::rand() % 200000;
     }
     auto start = std::chrono::steady_clock::now();
     bubble_sort(numbers);
     auto end = std::chrono::steady_clock::now();
-    display(numbers);
+    //display(numbers);
     std::cout << std::endl;
-    std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::seconds>(end-start).count() << std::endl;
+    std::cout << "Czas w sekundach: " << std::chrono::duration_cast<std::chrono::microseconds>(end-start).count() << std::endl;
     return 0;
 }
