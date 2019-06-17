@@ -36,8 +36,7 @@ HEADERS += \
         game.h \
         globals.h
 
-FORMS += \
-        tictactoe.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

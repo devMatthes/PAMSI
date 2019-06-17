@@ -159,8 +159,8 @@ void Game::Reset()
     painter->end();
     board.Init();
     currentPlayer.player = X;
-    for (auto i = 0; i < 9; i++){
-        for (auto j = 0; j < 9; j++){
+    for (auto i = 0; i < 3; i++){
+        for (auto j = 0; j < 3; j++){
             displayBoard[i][j] = EMPTY;
         }
     }
